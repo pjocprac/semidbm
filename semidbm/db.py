@@ -20,6 +20,9 @@ _open = compat.file_open
 
 
 class _SemiDBM(object):
+
+    _data_open_flags = compat.DATA_OPEN_FLAGS
+
     """
 
     :param dbdir: The directory containing the dbm files.  If the directory
@@ -46,7 +49,7 @@ class _SemiDBM(object):
     def _load_db(self):
         self._create_db_dir()
         self._index = self._load_index(self._data_filename)
-        self._data_fd = os.open(self._data_filename, compat.DATA_OPEN_FLAGS)
+        self._data_fd = os.open(self._data_filename, self._data_open_flags)
         self._current_offset = os.lseek(self._data_fd, 0, os.SEEK_END)
 
     def _load_index(self, filename):
@@ -231,6 +234,9 @@ class _SemiDBM(object):
 
 
 class _SemiDBMReadOnly(_SemiDBM):
+
+    _data_open_flags = compat.DATA_OPEN_FLAGS_READONLY
+
     def __delitem__(self, key):
         self._method_not_allowed('delitem')
 
